@@ -1,0 +1,13 @@
+ruleset wovyn_base {
+  meta {
+    shares __testing
+  }
+  global {
+  }
+  
+  rule process_heartbeat {
+    select when echo hello
+    //to a wovyn:heartbeat event. This rule should return a directive.
+    send_directive("Heartbeat event occurred")
+  }
+}
