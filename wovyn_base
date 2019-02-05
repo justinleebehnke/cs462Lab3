@@ -10,8 +10,9 @@ ruleset wovyn_base {
   rule process_heartbeat {
     select when wovyn heartbeat
     pre {
-      never_used = event:attrs.klog("attrs")
+      genericThing = event:attrs{"genericThing"}.klog("genericThing")
     }
-    send_directive("Heartbeat Event Occurred")
+    if genericThing then
+      send_directive("Heartbeat Event Occurred")
   }
 }
