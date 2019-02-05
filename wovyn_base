@@ -2,11 +2,9 @@ ruleset wovyn_base {
   meta {
     
   }
-  
   global {
     
   }
-  
   rule process_heartbeat {
     select when wovyn heartbeat
     pre {
