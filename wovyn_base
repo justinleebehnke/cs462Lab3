@@ -2,15 +2,20 @@ ruleset wovyn_base {
   meta {
     
   }
+  
   global {
     
   }
+  
   rule process_heartbeat {
     select when wovyn heartbeat
     pre {
       genericThing = event:attrs{"genericThing"}.klog("genericThing")
     }
     if genericThing then
-      send_directive("Heartbeat Event Occurred")
-  }
+      send_directive("Wovyn Heartbeat Detected")
+    fired {
+      raise wovyn event "new_temperature_reading"
+      attributes { }
+    }
 }
