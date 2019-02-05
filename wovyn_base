@@ -5,6 +5,8 @@ ruleset wovyn_base {
   
   global {
     temperature_threshold = 76.6
+    num_to_notify = "9528739729"
+    num_from = "5072487466"
   }
   
   rule process_heartbeat {
@@ -45,6 +47,15 @@ ruleset wovyn_base {
     pre {
       tempF = event:attrs{"temperature"}.klog("VIOLATED TEMP")
       timestamp = event:attrs{"timestamp"}.klog("VIOLATED TIME")
+    }
+    always {
+      raise test event "new_message"
+      attributes {
+        "to":num_to_notify,
+        "from": num_from,
+        "message": "On " + time:strftime(timestamp, "%A %d %b %Y")  + " your temp sensor reported a reading of " + 
+        tempF + " degrees which is above the current threshold of " + temperature_threshold + " degrees."
+      }
     }
   }
 }
