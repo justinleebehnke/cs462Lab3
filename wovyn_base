@@ -4,7 +4,7 @@ ruleset wovyn_base {
   }
   
   global {
-    
+    temperature_threshold = 76.6
   }
   
   rule process_heartbeat {
@@ -17,18 +17,34 @@ ruleset wovyn_base {
     fired {
       raise wovyn event "new_temperature_reading"
       attributes { 
-        "temperature":genericThing{"data"}{"temperature"}[0]{"temperatureF"}, 
+        "temperature":genericThing{"data"}{"temperature"}[0]{"temperatureF"}.klog("Current Temp: "), 
         "timestamp": time:now()
       }
     }
   }
   
-  rule process_new_temp {
+  rule find_high_temps {
     select when wovyn new_temperature_reading
     pre {
-      tempF = event:attrs{"temperature"}.klog("temperature content")
-      timestamp = event:attrs{"timestamp"}.klog("time stamp value")
+      tempF = event:attrs{"temperature"}
+      timestamp = event:attrs{"timestamp"}
+      message = (tempF > temperature_threshold) => "Threshold Violated" | "Temperature Normal"
     }
-    
+    send_directive(message)
+    always {
+      raise wovyn event "threshold_violation"
+      attributes { 
+        "temperature":tempF, 
+        "timestamp": time:now()
+      } if (message == "Threshold Violated");
+    }
+  }
+  
+  rule threshold_notification {
+    select when wovyn threshold_violation
+    pre {
+      tempF = event:attrs{"temperature"}.klog("VIOLATED TEMP")
+      timestamp = event:attrs{"timestamp"}.klog("VIOLATED TIME")
+    }
   }
 }
