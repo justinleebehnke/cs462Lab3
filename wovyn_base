@@ -16,14 +16,19 @@ ruleset wovyn_base {
       send_directive("Wovyn Heartbeat Detected")
     fired {
       raise wovyn event "new_temperature_reading"
-      attributes { "temperature":genericThing{"data"}{"temperature"} }
+      attributes { 
+        "temperature":genericThing{"data"}{"temperature"}[0]{"temperatureF"}, 
+        "timestamp": time:now()
+      }
     }
   }
   
   rule process_new_temp {
     select when wovyn new_temperature_reading
     pre {
-      genericThing = event:attrs{"temperature"}.klog("temperature content")
+      tempF = event:attrs{"temperature"}.klog("temperature content")
+      timestamp = event:attrs{"timestamp"}.klog("time stamp value")
     }
+    
   }
 }
