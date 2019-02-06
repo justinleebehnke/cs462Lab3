@@ -4,7 +4,7 @@ ruleset wovyn_base {
   }
   
   global {
-    temperature_threshold = 76.6
+    temperature_threshold = 78.6
     num_to_notify = "9528739729"
     num_from = "5072487466"
   }
@@ -12,14 +12,14 @@ ruleset wovyn_base {
   rule process_heartbeat {
     select when wovyn heartbeat
     pre {
-      genericThing = event:attrs{"genericThing"}.klog("genericThing")
+      genericThing = event:attrs{"genericThing"}
     }
     if genericThing then
       send_directive("Wovyn Heartbeat Detected")
     fired {
       raise wovyn event "new_temperature_reading"
       attributes { 
-        "temperature":genericThing{"data"}{"temperature"}[0]{"temperatureF"}.klog("Current Temp: "), 
+        "temperature":genericThing{"data"}{"temperature"}[0]{"temperatureF"}, 
         "timestamp": time:now()
       }
     }
@@ -45,8 +45,8 @@ ruleset wovyn_base {
   rule threshold_notification {
     select when wovyn threshold_violation
     pre {
-      tempF = event:attrs{"temperature"}.klog("VIOLATED TEMP")
-      timestamp = event:attrs{"timestamp"}.klog("VIOLATED TIME")
+      tempF = event:attrs{"temperature"}
+      timestamp = event:attrs{"timestamp"}
     }
     always {
       raise test event "new_message"
