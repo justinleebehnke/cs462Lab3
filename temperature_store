@@ -12,4 +12,21 @@ ruleset temperature_store {
       ]
     }
   }
+  
+  rule collect_temperatures {
+    select when wovyn new_temperature_reading
+    //1stores the temperature and timestamp event attributes in an entity variable.
+    //The entity variable should contain all the temperatures that have been processed. 
+    //Hint: look at the resources above for persistent variable help.
+  }
+  
+  rule collect_threshold_violations {
+    select when wovyn threshold_violation
+    //2events and stores the violation temperature and a timestamp in a different entity variable that collects threshold violations.
+  }
+  
+  rule clear_temperatures {
+    select when sensor reading_reset
+    //resets both of the entity variables from the rules in (1) and (2).
+  }
 }
