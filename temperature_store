@@ -15,17 +15,18 @@ ruleset temperature_store {
     
     temperatures = function() {
       //A function called temperatures that returns the contents of the temperature entity variable.
-      ent:temperatures.defaultsTo([])
+      ent:temperatures.defaultsTo([]).klog("Call to temperatures() returned: ")
     }
     
     threshold_violations = function() {
       //that returns the contents of the threshold violation entity variable.
-      ent:violations.defaultsTo([])
+      ent:violations.defaultsTo([]).klog("Call to threshold_violations() returned: ")
     }
     
     inrange_temperatures = function() {
       //returns all the temperatures in the temperature entity variable that aren't in the threshold violation entity variable.
-      ent:temperatures.defaultsTo([]).difference(ent:violations.defaultsTo([])).defaultsTo([])
+      //A.difference(B);
+      ent:temperatures.defaultsTo([]).difference(ent:violations.defaultsTo([])).defaultsTo([]).klog("Call to inrange_temperatures() returned: ")
     }
   }
   
@@ -37,7 +38,7 @@ ruleset temperature_store {
       entry = {"tempF":tempF, "timestamp":timestamp}
     }
     always {
-      ent:temperatures := ent:temperatures.defaultsTo([]).add(entry);
+     ent:temperatures := ent:temperatures.defaultsTo([]).append(entry).klog("New Temp Added");
     }
   }
   
@@ -49,7 +50,7 @@ ruleset temperature_store {
       entry = {"tempF":tempF, "timestamp":timestamp}
     }
     always {
-      ent:violations := ent:violations.defaultsTo([]).add(entry);
+      ent:violations := ent:violations.defaultsTo([]).append(entry).klog("Violation Added");
     }
   }
   
