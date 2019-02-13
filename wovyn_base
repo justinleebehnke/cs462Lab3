@@ -37,7 +37,7 @@ ruleset wovyn_base {
       raise wovyn event "threshold_violation"
       attributes { 
         "temperature":tempF, 
-        "timestamp": time:now()
+        "timestamp": timestamp
       } if (message == "Threshold Violated");
     }
   }
@@ -49,13 +49,13 @@ ruleset wovyn_base {
       timestamp = event:attrs{"timestamp"}
     }
     always {
-      raise test event "new_message"
+      /*raise test event "new_message"
       attributes {
         "to":num_to_notify,
         "from": num_from,
         "message": "On " + time:strftime(timestamp, "%A %d %b %Y")  + " your temp sensor reported a reading of " + 
         tempF + " degrees which is above the current threshold of " + temperature_threshold + " degrees."
-      }
+      }*/
     }
   }
 }
