@@ -1,6 +1,7 @@
 ruleset temperature_store {
   meta {
-    shares __testing
+    shares __testing, temperatures, threshold_violations, inrange_temperatures
+    provides temperatures, threshold_violations, inrange_temperatures
   }
   global {
     __testing = { "queries":
@@ -11,6 +12,7 @@ ruleset temperature_store {
       //, { "domain": "d2", "type": "t2", "attrs": [ "a1", "a2" ] }
       ]
     }
+    
     temperatures = function() {
       //A function called temperatures that returns the contents of the temperature entity variable.
       ent:temperatures
